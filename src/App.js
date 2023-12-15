@@ -2,7 +2,6 @@ import './App.css';
 import React, { useState } from 'react';
 import BibInput from './BibInput';
 import Stats from './Stats'
-import LineChart from './LineChart';
 
 function App() {
   const [receivedObject, setReceivedObject] = useState(null);
@@ -15,9 +14,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <h1>Homestead 24 2024 tracker</h1>
         <BibInput onObjectReceived={handleObjectFromChild} />
         <Stats data={receivedObject} />
-        <LineChart />
       </header>
     </div>
 

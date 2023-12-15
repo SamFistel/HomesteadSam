@@ -1,9 +1,36 @@
 import React from 'react';
+import Chart from "chart.js/auto";
+import { Line } from 'react-chartjs-2';
+
 
 const Stats = (props) => {
     // Access the data passed from the parent component using props
     const laps = props.data;
+    const options = {
+        scales: {
+            y: {
+                // beginAtZero: true,
+            },
+        },
+        maintainAspectRatio: false 
+    };
+    var data = {
+        labels: [],
+        datasets: [
+            {
+                label: 'Speed Vs Laps',
+                data: [],
+                fill: false,
+                borderColor: 'rgba(75,192,192,1)',
+                borderWidth: 2,
+            },
+        ],
+    };
     var stats;
+    var tempLabels = [];
+    var tempData = [];
+
+
     if (laps != null) {
         stats = [];
         laps.forEach(element => {
@@ -11,14 +38,39 @@ const Stats = (props) => {
             var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(1.38, timeStringToSeconds(element[3]))];
             stats.push(stat);
         });
-    }
 
+
+        if (stats != null) {
+            stats.forEach(element => {
+                tempLabels.push(parseInt(element[0]))
+                tempData.push(element[4])
+            });
+            console.log(tempLabels)
+            console.log(tempData)
+
+
+            data = {
+                labels: tempLabels,
+                datasets: [
+                    {
+                        label: 'Speed Vs Laps',
+                        data: tempData,
+                        fill: false,
+                        borderColor: 'rgba(75,192,192,1)',
+                        borderWidth: 2,
+                    },
+                ],
+            };
+        }
+    }
     return (
-        <div>
-            {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>}
-            {/* {laps ? <div>{JSON.stringify(laps)}</div> : <div>No Data Yet </div>} */}
+        <div id = "graph">
+            {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
+            <Line data={data} options={options}/>
         </div>
     );
+
+
 
     function timeStringToSeconds(timeString) {
         const timeComponents = timeString.split(':');

@@ -32,7 +32,15 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+#graph {
+  width: 100%;
+  height: 80vh;
+  margin: 0;
+  padding: 0;
 }
