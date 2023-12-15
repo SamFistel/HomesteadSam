@@ -4,15 +4,21 @@ import { Line } from 'react-chartjs-2';
 
 
 const Stats = (props) => {
+    var stats;
+    var tempLabels = [];
+    var tempData = [];
+    var totalAverageSpeed = 0;
+    var averageLapTime = 0;
+    var totalDistance = 0;
     // Access the data passed from the parent component using props
     const laps = props.data;
     const options = {
         scales: {
             y: {
-                // beginAtZero: true,
+                beginAtZero: true,
             },
         },
-        maintainAspectRatio: false 
+        maintainAspectRatio: false
     };
     var data = {
         labels: [],
@@ -26,9 +32,6 @@ const Stats = (props) => {
             },
         ],
     };
-    var stats;
-    var tempLabels = [];
-    var tempData = [];
 
 
     if (laps != null) {
@@ -51,23 +54,33 @@ const Stats = (props) => {
                     {
                         label: 'Speed Vs Laps',
                         data: tempData,
-                        fill: false,
+                        fill: true,
                         borderColor: 'rgba(75,192,192,1)',
-                        borderWidth: 2,
+                        borderWidth: 1,
                     },
                 ],
             };
         }
     }
+    if (stats != null) {
+        totalDistance = parseFloat(parseInt(stats[stats.length - 1][0]) * 1.38).toFixed(2);
+        var time = parseInt(timeStringToSeconds(stats[stats.length - 1][1]))
+        totalAverageSpeed = calculateMPH(totalDistance, time);
+        
+    }
     return (
-        <div id = "graph">
+        <div id="graph">
+            <p>Total Average speed: {totalAverageSpeed} </p>
+            <p>Total Lap Time : Working on it </p>
+            <p>Total Milage : {totalDistance}</p>
+
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
-            <Line data={data} options={options}/>
+            <Line data={data} options={options} />
         </div>
     );
 
 
-
+    //function that converts the time input into seconds
     function timeStringToSeconds(timeString) {
         const timeComponents = timeString.split(':');
 
@@ -101,6 +114,7 @@ const Stats = (props) => {
         return totalSeconds;
     }
 
+    //Function to calculate miles per hour from distance and seconds.
     function calculateMPH(distanceInMiles, timeInSeconds) {
         // Convert time from seconds to hours
         const timeInHours = timeInSeconds / 3600;
