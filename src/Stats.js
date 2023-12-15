@@ -45,10 +45,6 @@ const Stats = (props) => {
                 tempLabels.push(parseInt(element[0]))
                 tempData.push(element[4])
             });
-            console.log(tempLabels)
-            console.log(tempData)
-
-
             data = {
                 labels: tempLabels,
                 datasets: [
