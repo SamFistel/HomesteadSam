@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Chart from "chart.js/auto";
 import { Line } from 'react-chartjs-2';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 
 const Stats = (props) => {
@@ -12,6 +14,13 @@ const Stats = (props) => {
     var totalDistance = 0;
     // Access the data passed from the parent component using props
     const laps = props.data;
+    // State to store the selected range
+    const [selectedRange, setSelectedRange] = useState([25, 75]);
+
+    // Event handler to update the selected range
+    const handleSliderChange = (newRange) => {
+        setSelectedRange(newRange);
+    };
     const options = {
         scales: {
             y: {
@@ -62,12 +71,16 @@ const Stats = (props) => {
             };
         }
     }
-    if (stats != null) {
+    //stuff to update total info
+    //NOTE: Calculations are based on last entry in the stats datastructure
+    if (stats != null && stats.length > 0) {
+        //totalDistance = last lap number * 1.38
         totalDistance = parseFloat(parseInt(stats[stats.length - 1][0]) * 1.38).toFixed(2);
+        //time = last lap total time
         var time = parseInt(timeStringToSeconds(stats[stats.length - 1][1]))
         totalAverageSpeed = calculateMPH(totalDistance, time);
         averageTime = convertSecondsToMinutes(timeStringToSeconds(stats[stats.length - 1][1]), stats[stats.length - 1][0]);
-        
+
     }
     return (
         <div id="graph">
@@ -77,6 +90,24 @@ const Stats = (props) => {
 
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
             <Line data={data} options={options} />
+            <div style={{ width: '80%', margin: 'auto' }}>
+                <h1>Range Slider with Two Handles</h1>
+
+                {/* Range slider with two handles */}
+                <Slider
+                    range
+                    min={0}
+                    max={100}
+                    step={1}
+                    defaultValue={selectedRange}
+                    onChange={handleSliderChange}
+                />
+
+                {/* Display the selected range */}
+                <p>
+                    Selected Range: {selectedRange[0]} to {selectedRange[1]}
+                </p>
+            </div>
         </div>
     );
 
