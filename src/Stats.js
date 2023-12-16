@@ -6,12 +6,16 @@ import 'rc-slider/assets/index.css';
 
 
 const Stats = (props) => {
-    var stats;
+    var stats = [];
+    var statsSelected = [];
     var tempLabels = [];
     var tempData = [];
     var totalAverageSpeed = 0;
     var averageTime = { minutes: 0, seconds: 0 };
     var totalDistance = 0;
+    var selectedAverageSpeed = 0;
+    var selectedAverageTime = { minutes: 0, seconds: 0 };
+    var selectedTotalDistance = 0;
     // Access the data passed from the parent component using props
     const laps = props.data;
     // State to store the selected range
@@ -53,22 +57,46 @@ const Stats = (props) => {
 
 
         if (stats != null) {
-            stats.forEach(element => {
-                tempLabels.push(parseInt(element[0]))
-                tempData.push(element[4])
-            });
-            data = {
-                labels: tempLabels,
-                datasets: [
-                    {
-                        label: 'Speed Vs Laps',
-                        data: tempData,
-                        fill: true,
-                        borderColor: 'rgba(75,192,192,1)',
-                        borderWidth: 1,
-                    },
-                ],
-            };
+            if (selectedRange[1] !== 9999) {
+                for (let i = selectedRange[0], j = 0; i <= selectedRange[1]; i++, j++) {
+                    statsSelected[j] = stats[i - 1];
+                }
+                statsSelected.forEach(element => {
+                    tempLabels.push(parseInt(element[0]))
+                    tempData.push(element[4])
+                });
+                data = {
+                    labels: tempLabels,
+                    datasets: [
+                        {
+                            label: 'Speed Vs Laps',
+                            data: tempData,
+                            fill: true,
+                            borderColor: 'rgba(75,192,192,1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                };
+            } else {
+                //sliders not changed yet
+                stats.forEach(element => {
+                    tempLabels.push(parseInt(element[0]))
+                    tempData.push(element[4])
+                });
+                data = {
+                    labels: tempLabels,
+                    datasets: [
+                        {
+                            label: 'Speed Vs Laps',
+                            data: tempData,
+                            fill: true,
+                            borderColor: 'rgba(75,192,192,1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                };
+            }
+
         }
     }
     //stuff to update total info
@@ -80,6 +108,20 @@ const Stats = (props) => {
         var time = parseInt(timeStringToSeconds(stats[stats.length - 1][1]))
         totalAverageSpeed = calculateMPH(totalDistance, time);
         averageTime = convertSecondsToMinutes(timeStringToSeconds(stats[stats.length - 1][1]), stats[stats.length - 1][0]);
+    }
+    if (statsSelected != null && statsSelected.length > 0) {
+        let i = 0;
+        let selectedLapSeconds = 0;
+        statsSelected.forEach(element => {
+            i++;
+            selectedLapSeconds += element[3];
+
+        });
+        if (i !== 0) {
+            selectedAverageTime = convertSecondsToMinutes(selectedLapSeconds, i);
+        }
+        selectedTotalDistance = (i * 1.38).toFixed(2)
+        selectedAverageSpeed = calculateMPH(selectedTotalDistance, selectedLapSeconds);
 
     }
     return (
@@ -98,38 +140,36 @@ const Stats = (props) => {
                 </tr>
                 <tr>
                     <td>
-                        <p>Selected Average speed: {totalAverageSpeed} </p>
+                        <p>Selected Average speed: {selectedAverageSpeed} </p>
                     </td>
                     <td>
-                        <p>Selected Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
+                        <p>Selected Average Lap Time (MM:SS): {selectedAverageTime.minutes}:{selectedAverageTime.seconds}</p>
                     </td>
                     <td>
-                        <p>Selected Milage : {totalDistance}</p>
+                        <p>Selected Milage : {selectedTotalDistance}</p>
                     </td>
                 </tr>
             </table>
-            {/* <p>Total Average speed: {totalAverageSpeed} </p>
-            <p>Total Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
-            <p>Total Milage : {totalDistance}</p> */}
-
-            {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
-            <Line data={data} options={options} />
-            <div style={{ width: '80%', margin: 'auto' }}>
+            <div style={{ width: '80%', paddingTop: '40px', margin: 'auto' }}>
                 {/* Range slider with two handles */}
-                <Slider
+                <Slider disabled={stats.length < 1}
                     range
                     min={1}
-                    max={100}
+                    max={stats.length}
                     step={1}
                     defaultValue={selectedRange}
                     onChange={handleSliderChange}
                 />
 
                 {/* Display the selected range */}
-                <p>
+                <p hidden={selectedRange[1] === 9999}>
                     Selected Range: {selectedRange[0]} to {selectedRange[1]}
                 </p>
             </div>
+
+            {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
+            <Line data={data} options={options} />
+
         </div>
     );
 
@@ -178,7 +218,7 @@ const Stats = (props) => {
 
         return mph;
     }
-
+    //Function to convert total seconds to minutes and seconds
     function convertSecondsToMinutes(totalSeconds, divisor) {
         // Calculate minutes and seconds
         const minutes = Math.floor(totalSeconds / divisor / 60);
