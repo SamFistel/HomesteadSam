@@ -15,7 +15,7 @@ const Stats = (props) => {
     // Access the data passed from the parent component using props
     const laps = props.data;
     // State to store the selected range
-    const [selectedRange, setSelectedRange] = useState([25, 75]);
+    const [selectedRange, setSelectedRange] = useState([0, 9999]);
 
     // Event handler to update the selected range
     const handleSliderChange = (newRange) => {
@@ -91,12 +91,10 @@ const Stats = (props) => {
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
             <Line data={data} options={options} />
             <div style={{ width: '80%', margin: 'auto' }}>
-                <h1>Range Slider with Two Handles</h1>
-
                 {/* Range slider with two handles */}
                 <Slider
                     range
-                    min={0}
+                    min={1}
                     max={100}
                     step={1}
                     defaultValue={selectedRange}
