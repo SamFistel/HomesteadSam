@@ -84,9 +84,33 @@ const Stats = (props) => {
     }
     return (
         <div id="graph">
-            <p>Total Average speed: {totalAverageSpeed} </p>
+            <table style={{ width: '80%', margin: 'auto' }}>
+                <tr>
+                    <td>
+                        <p>Total Average speed: {totalAverageSpeed} </p>
+                    </td>
+                    <td>
+                        <p>Total Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
+                    </td>
+                    <td>
+                        <p>Total Milage : {totalDistance}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Selected Average speed: {totalAverageSpeed} </p>
+                    </td>
+                    <td>
+                        <p>Selected Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
+                    </td>
+                    <td>
+                        <p>Selected Milage : {totalDistance}</p>
+                    </td>
+                </tr>
+            </table>
+            {/* <p>Total Average speed: {totalAverageSpeed} </p>
             <p>Total Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
-            <p>Total Milage : {totalDistance}</p>
+            <p>Total Milage : {totalDistance}</p> */}
 
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
             <Line data={data} options={options} />
