@@ -8,7 +8,7 @@ const Stats = (props) => {
     var tempLabels = [];
     var tempData = [];
     var totalAverageSpeed = 0;
-    var averageLapTime = 0;
+    var averageTime = { minutes: 0, seconds: 0 };
     var totalDistance = 0;
     // Access the data passed from the parent component using props
     const laps = props.data;
@@ -66,12 +66,13 @@ const Stats = (props) => {
         totalDistance = parseFloat(parseInt(stats[stats.length - 1][0]) * 1.38).toFixed(2);
         var time = parseInt(timeStringToSeconds(stats[stats.length - 1][1]))
         totalAverageSpeed = calculateMPH(totalDistance, time);
+        averageTime = convertSecondsToMinutes(timeStringToSeconds(stats[stats.length - 1][1]), stats[stats.length - 1][0]);
         
     }
     return (
         <div id="graph">
             <p>Total Average speed: {totalAverageSpeed} </p>
-            <p>Total Lap Time : Working on it </p>
+            <p>Total Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
             <p>Total Milage : {totalDistance}</p>
 
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
@@ -124,6 +125,18 @@ const Stats = (props) => {
 
         return mph;
     }
+
+    function convertSecondsToMinutes(totalSeconds, divisor) {
+        // Calculate minutes and seconds
+        const minutes = Math.floor(totalSeconds / divisor / 60);
+        const seconds = Math.floor((totalSeconds / divisor) % 60);
+
+        // Return the result as an object
+        return {
+            minutes,
+            seconds,
+        };
+    };
 
 
 };
