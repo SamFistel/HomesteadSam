@@ -16,6 +16,9 @@ const Stats = (props) => {
     var selectedAverageSpeed = 0;
     var selectedAverageTime = { minutes: 0, seconds: 0 };
     var selectedTotalDistance = 0;
+    var timeRemaining = 0;
+
+
     // Access the data passed from the parent component using props
     const laps = props.data;
     // State to store the selected range
@@ -25,6 +28,15 @@ const Stats = (props) => {
     const handleSliderChange = (newRange) => {
         setSelectedRange(newRange);
     };
+    //goals
+    const [miles, setMiles] = useState(0);
+    const lapsPerMile = 1.38;
+    const [goalLaps, setLaps] = useState(0);
+
+    const calculateLaps = () => {
+        setLaps(Math.ceil(miles / lapsPerMile));
+    };
+
     const options = {
         scales: {
             y: {
@@ -54,6 +66,7 @@ const Stats = (props) => {
             var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(1.38, timeStringToSeconds(element[3]))];
             stats.push(stat);
         });
+        // console.log(stats[stats.length - 1][1]);
 
 
         if (stats != null) {
@@ -168,8 +181,20 @@ const Stats = (props) => {
             </div>
 
             {/* {stats ? <div>{JSON.stringify(stats)}</div> : <div> No Data yet</div>} */}
-            <Line data={data} options={options} />
+            <Line id="graph2" data={data} options={options} />
 
+            <div>
+                <h2>Mile to Laps Calculator</h2>
+                <label htmlFor="miles">Enter miles: </label>
+                <input
+                    type="number"
+                    id="miles"
+                    value={miles}
+                    onChange={(e) => setMiles(parseFloat(e.target.value))}
+                />
+                <button onClick={calculateLaps}>Calculate Laps</button>
+                {goalLaps !== 0 && <p>Number of laps needed: {goalLaps}</p>}
+            </div>
         </div>
     );
 
