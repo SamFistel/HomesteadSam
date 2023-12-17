@@ -11,12 +11,13 @@ const Stats = (props) => {
     var tempLabels = [];
     var tempData = [];
     var totalAverageSpeed = 0;
-    var averageTime = { minutes: 0, seconds: 0 };
+    var averageTime = {hours: 0, minutes: 0, seconds: 0 };
     var totalDistance = 0;
     var selectedAverageSpeed = 0;
-    var selectedAverageTime = { minutes: 0, seconds: 0 };
+    var selectedAverageTime = {hours: 0, minutes: 0, seconds: 0 };
     var selectedTotalDistance = 0;
-    var timeRemaining = 0;
+    var timeRemaining = {hours: 0, minutes: 0, seconds: 0 };
+    var lastLapNum = 0;
 
 
     // Access the data passed from the parent component using props
@@ -66,10 +67,15 @@ const Stats = (props) => {
             var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(1.38, timeStringToSeconds(element[3]))];
             stats.push(stat);
         });
-        // console.log(stats[stats.length - 1][1]);
 
 
         if (stats != null) {
+            if (stats.length > 0) {
+                lastLapNum = stats[stats.length - 1][0];
+                var remainingSeconds = 86400 - timeStringToSeconds(stats[stats.length - 1][1])
+                timeRemaining = convertSecondsToMinutes(remainingSeconds, 1);
+            }
+
             if (selectedRange[1] !== 9999) {
                 for (let i = selectedRange[0], j = 0; i <= selectedRange[1]; i++, j++) {
                     statsSelected[j] = stats[i - 1];
@@ -145,7 +151,7 @@ const Stats = (props) => {
                         <p>Total Average speed: {totalAverageSpeed} </p>
                     </td>
                     <td>
-                        <p>Total Average Lap Time (MM:SS): {averageTime.minutes}:{averageTime.seconds}</p>
+                        <p>Total Average Lap Time (HH:MM:SS): {averageTime.hours}:{averageTime.minutes}:{averageTime.seconds}</p>
                     </td>
                     <td>
                         <p>Total Milage : {totalDistance}</p>
@@ -156,7 +162,7 @@ const Stats = (props) => {
                         <p>Selected Average speed: {selectedAverageSpeed} </p>
                     </td>
                     <td>
-                        <p>Selected Average Lap Time (MM:SS): {selectedAverageTime.minutes}:{selectedAverageTime.seconds}</p>
+                        <p>Selected Average Lap Time (HH:MM:SS): {selectedAverageTime.hours}:{selectedAverageTime.minutes}:{selectedAverageTime.seconds}</p>
                     </td>
                     <td>
                         <p>Selected Milage : {selectedTotalDistance}</p>
@@ -194,6 +200,11 @@ const Stats = (props) => {
                 />
                 <button onClick={calculateLaps}>Calculate Laps</button>
                 {goalLaps !== 0 && <p>Number of laps needed: {goalLaps}</p>}
+                {lastLapNum !== 0 && <p>Number of laps skated: {lastLapNum}</p>}
+                {lastLapNum !== 0 && goalLaps !== 0 && <p>Number of laps Remaining: {goalLaps - lastLapNum}</p>}
+
+                <p>Remaining Time From Last Lap (HH:MM:SS): {timeRemaining.hours}:{timeRemaining.minutes}:{timeRemaining.seconds}</p>
+
             </div>
         </div>
     );
@@ -246,11 +257,13 @@ const Stats = (props) => {
     //Function to convert total seconds to minutes and seconds
     function convertSecondsToMinutes(totalSeconds, divisor) {
         // Calculate minutes and seconds
-        const minutes = Math.floor(totalSeconds / divisor / 60);
+        const hours = Math.floor(totalSeconds / divisor / 3600);
+        const minutes = Math.floor(((totalSeconds / divisor) % 3600) / 60);
         const seconds = Math.floor((totalSeconds / divisor) % 60);
 
         // Return the result as an object
         return {
+            hours,
             minutes,
             seconds,
         };
