@@ -11,12 +11,12 @@ const Stats = (props) => {
     var tempLabels = [];
     var tempData = [];
     var totalAverageSpeed = 0;
-    var averageTime = {hours: 0, minutes: 0, seconds: 0 };
+    var averageTime = { hours: 0, minutes: 0, seconds: 0 };
     var totalDistance = 0;
     var selectedAverageSpeed = 0;
-    var selectedAverageTime = {hours: 0, minutes: 0, seconds: 0 };
+    var selectedAverageTime = { hours: 0, minutes: 0, seconds: 0 };
     var selectedTotalDistance = 0;
-    var timeRemaining = {hours: 0, minutes: 0, seconds: 0 };
+    var timeRemaining = { hours: 0, minutes: 0, seconds: 0 };
     var lastLapNum = 0;
 
 
@@ -31,11 +31,22 @@ const Stats = (props) => {
     };
     //goals
     const [miles, setMiles] = useState(0);
-    const lapsPerMile = 1.38;
+    const [milesPerLap, setMilesPerLap] = useState(1.38);
     const [goalLaps, setLaps] = useState(0);
 
     const calculateLaps = () => {
-        setLaps(Math.ceil(miles / lapsPerMile));
+        setLaps(Math.ceil(miles / milesPerLap));
+    };
+
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+        if (event.target.value === "option1") {
+            setMilesPerLap(1.38);
+        } else {
+            setMilesPerLap(1.46);
+        }
     };
 
     const options = {
@@ -64,7 +75,7 @@ const Stats = (props) => {
         stats = [];
         laps.forEach(element => {
             //Lap Number, Total Time, Lap Time, Lap Seconds, Lap Speed
-            var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(1.38, timeStringToSeconds(element[3]))];
+            var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(milesPerLap, timeStringToSeconds(element[3]))];
             stats.push(stat);
         });
 
@@ -121,8 +132,8 @@ const Stats = (props) => {
     //stuff to update total info
     //NOTE: Calculations are based on last entry in the stats datastructure
     if (stats != null && stats.length > 0) {
-        //totalDistance = last lap number * 1.38
-        totalDistance = parseFloat(parseInt(stats[stats.length - 1][0]) * 1.38).toFixed(2);
+        //totalDistance = last lap number * milesPerLap
+        totalDistance = parseFloat(parseInt(stats[stats.length - 1][0]) * milesPerLap).toFixed(2);
         //time = last lap total time
         var time = parseInt(timeStringToSeconds(stats[stats.length - 1][1]))
         totalAverageSpeed = calculateMPH(totalDistance, time);
@@ -139,12 +150,34 @@ const Stats = (props) => {
         if (i !== 0) {
             selectedAverageTime = convertSecondsToMinutes(selectedLapSeconds, i);
         }
-        selectedTotalDistance = (i * 1.38).toFixed(2)
+        selectedTotalDistance = (i * milesPerLap).toFixed(2)
         selectedAverageSpeed = calculateMPH(selectedTotalDistance, selectedLapSeconds);
 
     }
     return (
         <div id="graph">
+            <div>
+                <label>
+                    <input
+                        type="radio"
+                        value="option1"
+                        checked={selectedOption === "option1"}
+                        onChange={handleOptionChange}
+                    />
+                    Inline Speed Skating
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        value="option2"
+                        checked={selectedOption === "option2"}
+                        onChange={handleOptionChange}
+                    />
+                    Skateboard
+                </label>
+
+            </div>
             <table style={{ width: '80%', margin: 'auto' }}>
                 <tr>
                     <td>
