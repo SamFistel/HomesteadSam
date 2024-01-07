@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import Chart from "chart.js/auto";
 import { Line } from 'react-chartjs-2';
 import Slider from 'rc-slider';
@@ -38,7 +39,7 @@ const Stats = (props) => {
         setLaps(Math.ceil(miles / milesPerLap));
     };
 
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState("option1");
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
