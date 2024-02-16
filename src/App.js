@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Homestead 24 2024 Proptype tracker</h1>
+        <h1>Homestead 24 2022-2024 Proptype tracker</h1>
         <BibInput onObjectReceived={handleObjectFromChild} />
         <Stats data={receivedObject} />
       </header>
