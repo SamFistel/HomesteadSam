@@ -165,7 +165,7 @@ const Stats = (props) => {
                         checked={selectedOption === "option1"}
                         onChange={handleOptionChange}
                     />
-                    Inline Speed Skating
+                    Roller
                 </label>
 
                 <label>
