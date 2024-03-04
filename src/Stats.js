@@ -185,7 +185,7 @@ const Stats = (props) => {
                         <p>Total Average speed: {totalAverageSpeed} </p>
                     </td>
                     <td>
-                        <p>Total Average Lap Time (HH:MM:SS): {averageTime.hours}:{averageTime.minutes}:{averageTime.seconds}</p>
+                        <p>Total Average Lap Time (HH:MM:SS): {addLeadingZeros(averageTime.hours)}:{addLeadingZeros(averageTime.minutes)}:{addLeadingZeros(averageTime.seconds)}</p>
                     </td>
                     <td>
                         <p>Total Mileage : {totalDistance}</p>
@@ -196,7 +196,7 @@ const Stats = (props) => {
                         <p>Selected Average speed: {selectedAverageSpeed} </p>
                     </td>
                     <td>
-                        <p>Selected Average Lap Time (HH:MM:SS): {selectedAverageTime.hours}:{selectedAverageTime.minutes}:{selectedAverageTime.seconds}</p>
+                        <p>Selected Average Lap Time (HH:MM:SS): {addLeadingZeros(selectedAverageTime.hours)}:{addLeadingZeros(selectedAverageTime.minutes)}:{addLeadingZeros(selectedAverageTime.seconds)}</p>
                     </td>
                     <td>
                         <p>Selected Mileage : {selectedTotalDistance}</p>
@@ -237,7 +237,7 @@ const Stats = (props) => {
                 {lastLapNum !== 0 && <p>Number of laps skated: {lastLapNum}</p>}
                 {lastLapNum !== 0 && goalLaps !== 0 && <p>Number of laps Remaining: {goalLaps - lastLapNum}</p>}
 
-                <p>Remaining Time From Last Lap (HH:MM:SS): {timeRemaining.hours}:{timeRemaining.minutes}:{timeRemaining.seconds}</p>
+                <p>Remaining Time From Last Lap (HH:MM:SS): {addLeadingZeros(timeRemaining.hours)}:{addLeadingZeros(timeRemaining.minutes)}:{addLeadingZeros(timeRemaining.seconds)}</p>
 
             </div>
         </div>
@@ -276,6 +276,9 @@ const Stats = (props) => {
         }
 
         return totalSeconds;
+    }
+    function addLeadingZeros(number) {
+        return String(number).padStart(2, '0');
     }
 
     //Function to calculate miles per hour from distance and seconds.
