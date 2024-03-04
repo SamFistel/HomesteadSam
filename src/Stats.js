@@ -188,7 +188,7 @@ const Stats = (props) => {
                         <p>Total Average Lap Time (HH:MM:SS): {averageTime.hours}:{averageTime.minutes}:{averageTime.seconds}</p>
                     </td>
                     <td>
-                        <p>Total Milage : {totalDistance}</p>
+                        <p>Total Mileage : {totalDistance}</p>
                     </td>
                 </tr>
                 <tr>
@@ -199,7 +199,7 @@ const Stats = (props) => {
                         <p>Selected Average Lap Time (HH:MM:SS): {selectedAverageTime.hours}:{selectedAverageTime.minutes}:{selectedAverageTime.seconds}</p>
                     </td>
                     <td>
-                        <p>Selected Milage : {selectedTotalDistance}</p>
+                        <p>Selected Mileage : {selectedTotalDistance}</p>
                     </td>
                 </tr>
             </table>
