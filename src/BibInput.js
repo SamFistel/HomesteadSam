@@ -7,7 +7,7 @@ const BibInput = ({ onObjectReceived }) => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  const [selectedValue, setSelectedValue] = useState("2024"); // State to keep track of selected value
+  const [selectedValue, setSelectedValue] = useState("2025"); // State to keep track of selected value
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value); // Update selected value when dropdown value changes
@@ -19,7 +19,7 @@ const BibInput = ({ onObjectReceived }) => {
     const bibParam = urlParams.get('bib');
 
     // Check if the year parameter exists in the URL
-    if (yearParam && ['2022', '2023', '2024'].includes(yearParam)) {
+    if (yearParam && ['2022', '2023', '2024', '2025'].includes(yearParam)) {
       setSelectedValue(yearParam); // Assign the year parameter to loadedYear state
     }
     if (bibParam) {
@@ -39,8 +39,9 @@ const BibInput = ({ onObjectReceived }) => {
     // xhr.open('GET', 'https://my4.raceresult.com/204047/RRPublish/data/list?key=b02d8bcb6d81d09372a43de65f7f7d48&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2023
     // xhr.open('GET', 'https://my1.raceresult.com/259072/RRPublish/data/list?key=eca2e3d1510caee33b7710a250a6f2c1&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
     // xhr.open('GET', 'https://raw.githubusercontent.com/PeterChu3/jsonHosting/main/12.json'); // Dummy data
-
-    if (selectedValue === "2024") {
+    if (selectedValue === "2025") {
+      xhr.open('GET', 'https://my4.raceresult.com/310199/RRPublish/data/list?key=8d488f25d22b08ed0dc395c939995c3d&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
+    } else if (selectedValue === "2024") {
       xhr.open('GET', 'https://my1.raceresult.com/259072/RRPublish/data/list?key=eca2e3d1510caee33b7710a250a6f2c1&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
     } else if (selectedValue === "2023") {
       xhr.open('GET', 'https://my4.raceresult.com/204047/RRPublish/data/list?key=b02d8bcb6d81d09372a43de65f7f7d48&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2023
@@ -65,9 +66,10 @@ const BibInput = ({ onObjectReceived }) => {
   return (
     <div>
       <select id="dropdown" value={selectedValue} onChange={handleChange}>
-        <option value="2024">2024</option> {/* Default option */}
-        <option value="2023">2023</option> {/* Second option */}
-        <option value="2022">2022</option> {/* Third option */}
+        <option value="2025">2025</option> {/* Default option */}
+        <option value="2024">2024</option> {/* Second option */}
+        <option value="2023">2023</option> {/* Third option */}
+        <option value="2022">2022</option> {/* Fourth option */}
       </select>
       <input onChange={handleInputChange} value={inputValue} type="number"></input>
       <button id="myButton" onClick={handleButtonClick}>Get Data From Bib Number</button>
