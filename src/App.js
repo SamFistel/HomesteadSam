@@ -7,14 +7,14 @@ function App() {
   const [receivedObject, setReceivedObject] = useState(null);
 
   const handleObjectFromChild = (object) => {
-    setReceivedObject(object.data);
+    setReceivedObject(object);
 
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Homestead 24 2022-2024 Stats & Grapher</h1>
+        <h1>Homestead 24 2022-2025 Stats & Grapher</h1>
         <BibInput onObjectReceived={handleObjectFromChild} />
         <Stats data={receivedObject} />
       </header>

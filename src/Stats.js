@@ -9,6 +9,7 @@ import 'rc-slider/assets/index.css';
 const Stats = (props) => {
     var stats = [];
     var statsSelected = [];
+    var name = "";
     var tempLabels = [];
     var tempData = [];
     var totalAverageSpeed = 0;
@@ -74,9 +75,10 @@ const Stats = (props) => {
 
     if (laps != null) {
         stats = [];
-        laps.forEach(element => {
+        name = extractNameFromKey(laps);
+        laps.data.forEach(element => {
             //Lap Number, Total Time, Lap Time, Lap Seconds, Lap Speed
-            var stat = [element[1], element[2], element[3], timeStringToSeconds(element[3]), calculateMPH(milesPerLap, timeStringToSeconds(element[3]))];
+            var stat = [element[2], element[3], element[4], timeStringToSeconds(element[4]), calculateMPH(milesPerLap, timeStringToSeconds(element[4]))];
             stats.push(stat);
         });
 
@@ -203,6 +205,9 @@ const Stats = (props) => {
                     </td>
                 </tr>
             </table>
+            <div>
+                <h1>{name}</h1>
+            </div>
             <div style={{ width: '80%', paddingTop: '40px', margin: 'auto' }}>
                 {/* Range slider with two handles */}
                 <Slider disabled={stats.length < 1}
@@ -306,6 +311,10 @@ const Stats = (props) => {
         };
     };
 
+    function extractNameFromKey(key) {
+        const match = key.key.match(/#\d+_\d+\/\/\/(.*?)\/\/\//); // Extract the name part
+        return match ? match[1] : null; // Return the extracted name or null if not found
+    }
 
 };
 

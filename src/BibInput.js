@@ -27,11 +27,16 @@ const BibInput = ({ onObjectReceived }) => {
     }
   }, []); // Only run this effect once, when the component mounts
 
-  useEffect(() => {
-    if (inputValue) {
-      handleButtonClick();
+  function findKeyBySecondNumber(targetNumber, data) {
+    for (const key in data) {
+      const match = key.match(/#\d+_(\d+)/); // Extract second number
+      if (match && match[1] === targetNumber) {
+        return { key, data: data[key] }; // Return both key and data
+      }
     }
-  }, [inputValue]);
+    return null; // Return null if not found
+  }
+
 
   const handleButtonClick = () => {
     const xhr = new XMLHttpRequest();
@@ -39,18 +44,19 @@ const BibInput = ({ onObjectReceived }) => {
     // xhr.open('GET', 'https://my4.raceresult.com/204047/RRPublish/data/list?key=b02d8bcb6d81d09372a43de65f7f7d48&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2023
     // xhr.open('GET', 'https://my1.raceresult.com/259072/RRPublish/data/list?key=eca2e3d1510caee33b7710a250a6f2c1&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
     // xhr.open('GET', 'https://raw.githubusercontent.com/PeterChu3/jsonHosting/main/12.json'); // Dummy data
+    //https://my4.raceresult.com/310199/RRPublish/data/list?key=8d488f25d22b08ed0dc395c939995c3d&listname=Online%7CLap%20Details&page=live&contest=0&r=pid&pid=814
     if (selectedValue === "2025") {
-      xhr.open('GET', 'https://my4.raceresult.com/310199/RRPublish/data/list?key=8d488f25d22b08ed0dc395c939995c3d&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
+      xhr.open('GET', 'https://my4.raceresult.com/310199/RRPublish/data/list?key=8d488f25d22b08ed0dc395c939995c3d&listname=Online%7CLap%20Details&page=live&contest=0'); // 2025
     } else if (selectedValue === "2024") {
-      xhr.open('GET', 'https://my1.raceresult.com/259072/RRPublish/data/list?key=eca2e3d1510caee33b7710a250a6f2c1&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2024
+      xhr.open('GET', 'https://my1.raceresult.com/259072/RRPublish/data/list?key=eca2e3d1510caee33b7710a250a6f2c1&listname=Online%7CLap%20Details&page=live&contest=0'); // 2024
     } else if (selectedValue === "2023") {
-      xhr.open('GET', 'https://my4.raceresult.com/204047/RRPublish/data/list?key=b02d8bcb6d81d09372a43de65f7f7d48&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2023
+      xhr.open('GET', 'https://my4.raceresult.com/204047/RRPublish/data/list?key=b02d8bcb6d81d09372a43de65f7f7d48&listname=Online%7CLap%20Details&page=live&contest=0'); // 2023
     } else if (selectedValue === "2022") {
-      xhr.open('GET', 'https://my4.raceresult.com/192607/RRPublish/data/list?key=9d484a9a9259ff0ae1a4a8570861bc3b&listname=Online%7CLap%20Details&page=live&contest=0&r=bib2&bib=' + inputValue); // 2022
+      xhr.open('GET', 'https://my4.raceresult.com/192607/RRPublish/data/list?key=9d484a9a9259ff0ae1a4a8570861bc3b&listname=Online%7CLap%20Details&page=live&contest=0'); // 2022
     }
     xhr.onload = function () {
       if (xhr.status === 200) {
-        onObjectReceived(JSON.parse(xhr.responseText));
+        onObjectReceived(findKeyBySecondNumber(inputValue, JSON.parse(xhr.responseText).data));
 
       }
     };
